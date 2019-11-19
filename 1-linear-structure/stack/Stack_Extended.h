@@ -14,10 +14,13 @@ public:
 
     Stack_Extended(int max);
 
+    // Reset the stack to be empty
     void clear();
 
+    // If the stack is full, return true;else return false.
     bool full() const;
 
+    // Return the number of entries in the stack.
     int size() const;
 
 };
