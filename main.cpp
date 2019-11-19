@@ -1,6 +1,5 @@
-#include <iostream>
-
+#include "Test-File/stack_test.h"
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    stack_test();
     return 0;
 }
