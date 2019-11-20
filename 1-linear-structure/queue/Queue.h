@@ -12,15 +12,15 @@ class Queue {
 
 public:
     Queue() {
-        max_size = 10;
-        cur_size = 0;
-        entry = new Queue_entry[max_size];
-        rear = 0;
-        front = 0;
+        _maxSize = 10;
+        _curSize = 0;
+        _entry = new Queue_entry[_maxSize];
+        _rear = 0;
+        _front = 0;
     }
 
     ~Queue() {
-        delete[]entry;
+        delete[]_entry;
     }
 
     void append(const Queue_entry x);
@@ -34,23 +34,23 @@ public:
     bool empty();
 
 protected:
-    Queue_entry *entry;
-    int max_size;
-    int cur_size;
-    int front;
-    int rear;
+    Queue_entry *_entry;
+    int _maxSize;
+    int _curSize;
+    int _front;
+    int _rear;
 };
 
 template<class Queue_entry>
 void Queue<Queue_entry>::append(const Queue_entry x) {
-    if ((rear + 1) % max_size == front) {
+    if ((_rear + 1) % _maxSize == _front) {
         std::cout << "The queue overflow" << std::endl;
         return;
     } else {
         std::cout << "append: " << x << std::endl;
-        entry[rear] = x;
-        rear = (rear + 1) % max_size;
-        cur_size++;
+        _entry[_rear] = x;
+        _rear = (_rear + 1) % _maxSize;
+        _curSize++;
     }
 }
 
@@ -60,15 +60,15 @@ void Queue<Queue_entry>::serve() {
         std::cout << "The queue underflow" << std::endl;
         return;
     } else {
-        std::cout << "serve: " << entry[front] << std::endl;
-        front = (front + 1) % max_size;
-        cur_size--;
+        std::cout << "serve: " << _entry[_front] << std::endl;
+        _front = (_front + 1) % _maxSize;
+        _curSize--;
     }
 }
 
 template<class Queue_entry>
 int Queue<Queue_entry>::size() {
-    return cur_size;
+    return _curSize;
 }
 
 template<class Queue_entry>
@@ -76,13 +76,13 @@ void Queue<Queue_entry>::retriever(Queue_entry &x) const {
     if (empty()) {
         std::cout << "The stack is empty" << std::endl;
     } else {
-        x = entry[front];
+        x = _entry[_front];
     }
 }
 
 template<class Queue_entry>
 bool Queue<Queue_entry>::empty() {
-    return front == rear;
+    return _front == _rear;
 }
 
 #endif //UNGEE_DATASTRUCTURES_QUEUE_H

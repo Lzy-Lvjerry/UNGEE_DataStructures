@@ -37,22 +37,22 @@ Stack_Extended<Stack_entry>::Stack_Extended(int max):Stack<Stack_entry>(max) {}
 
 template<typename Stack_entry>
 void Stack_Extended<Stack_entry>::clear() {
-    this->count = 0;
+    this->_count = 0;
 }
 
 template<typename Stack_entry>
 bool Stack_Extended<Stack_entry>::full() const {
-    return this->count > this->max_stack;
+    return this->_count > this->max_stack;
 }
 
 template<typename Stack_entry>
 int Stack_Extended<Stack_entry>::size() const {
-    return this->count;
+    return this->_count;
 }
 
 template<typename Stack_entry>
 void Stack_Extended<Stack_entry>::resize(int new_size) {
-    this->count = (this->count < new_size) ? this->count : new_size;
+    this->_count = (this->_count < new_size) ? this->_count : new_size;
     this->max_stack = new_size;
 }
 

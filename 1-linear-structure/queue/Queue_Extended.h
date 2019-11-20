@@ -22,14 +22,14 @@ protected:
 
 template<class Queue_entry>
 bool Queue_Extended<Queue_entry>::full() const {
-    return (this->rear + 1) % this->max_size == this->front;
+    return (this->_rear + 1) % this->_maxSize == this->_front;
 }
 
 template<class Queue_entry>
 void Queue_Extended<Queue_entry>::clear() {
-    this->cur_size = 0;
-    this->rear = 0;
-    this->front = 0;
+    this->_curSize = 0;
+    this->_rear = 0;
+    this->_front = 0;
 }
 
 template<class Queue_entry>
