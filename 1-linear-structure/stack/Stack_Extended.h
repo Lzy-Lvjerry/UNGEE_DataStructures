@@ -23,6 +23,8 @@ public:
     // Return the number of entries in the stack.
     int size() const;
 
+    // change the stack's max size
+    void resize(int new_size);
 };
 
 template<typename Stack_entry>
@@ -46,6 +48,12 @@ bool Stack_Extended<Stack_entry>::full() const {
 template<typename Stack_entry>
 int Stack_Extended<Stack_entry>::size() const {
     return this->count;
+}
+
+template<typename Stack_entry>
+void Stack_Extended<Stack_entry>::resize(int new_size) {
+    this->count = (this->count < new_size) ? this->count : new_size;
+    this->max_stack = new_size;
 }
 
 #endif //UNGEE_DATASTRUCTURES_STACK_EXTENDED_H

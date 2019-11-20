@@ -7,5 +7,5 @@
 
 void stack_test();
 
-
+void stack_bracket_matching();
 #endif //UNGEE_DATASTRUCTURES_STACK_TEST_H

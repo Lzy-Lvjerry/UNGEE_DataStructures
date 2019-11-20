@@ -50,7 +50,7 @@ public:
      * Post: If the Stack is not empty, the top of the Stack is returned in item. If the Stack
      *       is empty, and a warning is printed.
      * */
-    Stack_entry top() const;
+    void top(Stack_entry &item) const;
 
     /*
      * Pre: None.
@@ -87,11 +87,11 @@ void Stack<Stack_entry>::push(Stack_entry item) {
 }
 
 template<class Stack_entry>
-Stack_entry Stack<Stack_entry>::top() const {
+void Stack<Stack_entry>::top(Stack_entry &item) const {
     if (this->empty()) {
         std::cout << "Stack is empty" << std::endl;
     } else {
-        return entry[count - 1];
+        item = entry[count - 1];
     }
 }
 
