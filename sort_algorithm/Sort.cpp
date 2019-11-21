@@ -5,23 +5,23 @@
 #include "Sort.h"
 #include <iostream>
 
-void Sort::quick_sort(int *nums, int _left, int _right) {
-    int pivot = nums[_left];
-    int left = _left, right = _right;
-    while (_left < _right) {
-        while (_left < _right && pivot <= nums[_right]) {
-            _right--;
+void Sort::quick_sort(int *nums, int left, int right) {
+    int pivot = nums[left];
+    int row = left, high = right;
+    while (left < right) {
+        while (left < right && pivot <= nums[right]) {
+            right--;
         }
-        nums[_left] = nums[_right];
-        while (_left < _right && pivot >= nums[_left]) {
-            _left++;
+        nums[left] = nums[right];
+        while (left < right && pivot >= nums[left]) {
+            left++;
         }
-        nums[_right] = nums[_left];
+        nums[right] = nums[left];
     }
-    nums[_left] = pivot;
-    if (left < right) {
-        quick_sort(nums, left, _left - 1);
-        quick_sort(nums, _left + 1, right);
+    nums[left] = pivot;
+    if (row < high) {
+        quick_sort(nums, row, left - 1);
+        quick_sort(nums, left + 1, high);
     }
 }
 
