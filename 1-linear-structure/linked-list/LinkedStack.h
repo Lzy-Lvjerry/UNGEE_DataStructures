@@ -17,9 +17,9 @@ public:
 
     ~LinkedStack();
 
-    bool empty() const;
+    inline bool empty() const;
 
-    void push(const Stack_entry item);
+    void push(const Stack_entry &item);
 
     void pop();
 
@@ -42,7 +42,7 @@ bool LinkedStack<Stack_entry>::empty() const {
 }
 
 template<class Stack_entry>
-void LinkedStack<Stack_entry>::push(const Stack_entry item) {
+void LinkedStack<Stack_entry>::push(const Stack_entry &item) {
     auto new_top = new Node<Stack_entry>(item, top_node);
     std::cout << "Insert node to the stack: " << new_top->entry << std::endl;
 }
