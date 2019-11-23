@@ -38,10 +38,6 @@ private:
 };
 
 template<class Queue_entry>
-LinkedQueue<Queue_entry>::LinkedQueue() :front(nullptr), rear(nullptr) {
-}
-
-template<class Queue_entry>
 LinkedQueue<Queue_entry>::LinkedQueue(const LinkedQueue<Queue_entry> &original) {
     if (original.empty()) {
         front = nullptr;
@@ -54,6 +50,11 @@ LinkedQueue<Queue_entry>::LinkedQueue(const LinkedQueue<Queue_entry> &original) 
         rear = new Node<Queue_entry>(original_temp->entry);
     }
 }
+
+template<class Queue_entry>
+LinkedQueue<Queue_entry>::LinkedQueue() :front(nullptr), rear(nullptr) {
+}
+
 
 template<class Queue_entry>
 LinkedQueue<Queue_entry>::~LinkedQueue() {
