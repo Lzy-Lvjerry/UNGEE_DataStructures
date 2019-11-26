@@ -10,28 +10,46 @@
 void recursive_binary_1(const Order_List &the_list, const int &target,
                         int bottom, int top, int &position) {
     int data;
-    if(bottom<top){
-        int mid = (bottom+top)/2;
-        the_list.retrieve(data,mid);
-        if (data<target){
-            return recursive_binary_1(the_list,target,mid+1,top,position);
-        } else{
-            return recursive_binary_1(the_list,target,bottom,mid,position);
+    if (bottom < top) {
+        int mid = (bottom + top) / 2;
+        the_list.retrieve(data, mid);
+        if (data < target) {
+            return recursive_binary_1(the_list, target, mid + 1, top, position);
+        } else {
+            return recursive_binary_1(the_list, target, bottom, mid, position);
         }
-    }
-    else if(top<bottom){
-        std::cout << "not present"<<std::endl;
+    } else if (top < bottom) {
+        std::cout << "not present" << std::endl;
         return;
-    } else{
+    } else {
         position = bottom;
-        the_list.retrieve(data,bottom);
-        if (data==target){
-            std::cout <<"Success found target"<<std::endl;
-        } else{
-            std::cout << "Not found"<<std::endl;
+        the_list.retrieve(data, bottom);
+        if (data == target) {
+            std::cout << "Success found target" << std::endl;
+        } else {
+            std::cout << "Not found" << std::endl;
         }
     }
 
+}
+
+void binary_search_2(const Order_List &the_list,
+                     const int &target, int &position) {
+    int data;
+    int bottom = 0, top = the_list.size() - 1;
+    while (bottom <= top) {
+        position = (bottom + top) / 2;
+        the_list.retrieve(data, position);
+        if (data == target) {
+            std::cout << "success" << std::endl;
+        }
+        if (data < target) {
+            bottom = position + 1;
+        } else {
+            top = position - 1;
+        }
+    }
+    std::cout << "Not found" << std::endl;
 }
 
 #endif //UNGEE_DATASTRUCTURES_BINARY_SEARCH_H

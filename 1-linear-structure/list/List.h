@@ -34,7 +34,7 @@ public:
 
     void traverse(void (*visit)(List_entry &));
 
-private:
+protected:
     int count;
     int max_size;
     List_entry *entry;
