@@ -24,6 +24,8 @@ public:
 
     void insert(const Record &new_entry);
 
+    void remove(const Record &target);
+
 private:
     B_node<Record, order> *root;
 
@@ -41,12 +43,24 @@ private:
 
     void split_node(B_node<Record, order> *current,
                     const Record &extra_entry,
-                    B_node<Record, order> *extra_brach,
+                    B_node<Record, order> *extra_branch,
                     int position,
                     B_node<Record, order> *right_half,
                     Record &median);
 
+    void recursive_remove(B_node<Record, order> *current, const Record &target);
 
+    void remove_data(B_node<Record, order> *current, int position);
+
+    void copy_in_predecessor(B_node<Record, order> *current, int position);
+
+    void restore(B_node<Record, order> *current, int position);
+
+    void move_left(B_node<Record, order> *current, int position);
+
+    void move_right(B_node<Record, order> *current, int position);
+
+    void combine(B_node<Record, order> *current, int position);
 };
 
 template<class Record, int order>
@@ -169,6 +183,129 @@ B_tree<Record, order>::split_node(B_node<Record, order> *current, const Record &
     median = current->data[current->count - 1];
     right_half->branch[0] = current->branch[current->count];
     current->count--;
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::remove(const Record &target) {
+    recursive_remove(root, target);
+    if (root != nullptr && root->count == 0) {
+        B_node<Record, order> *old_root = root;
+        root = root->branch[0];
+        delete old_root;
+    }
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::recursive_remove(B_node<Record, order> *current, const Record &target) {
+    int position;
+    if (current == nullptr) {
+        std::cout << "not_present" << std::endl;
+    } else {
+        if (search_node(current, target, position)) {
+            if (current->branch[position] != nullptr) {
+                copy_in_predecessor(current, position);
+                recursive_remove(current->branch[position,
+                        current->data[position]]);
+            } else {
+                remove_data(current, position);
+            }
+        } else {
+            recursive_remove(current->branch[position, target]);
+        }
+        if (current->branch[position] != nullptr) {
+            if (current->branch[position]->count < (order - 1) / 2) {
+                restore(current, position);
+            }
+        }
+    }
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::remove_data(B_node<Record, order> *current, int position) {
+    for (int i = position; i < current->count - 1; ++i) {
+        current->data[i] = current->data[i + 1];
+    }
+    current->count--;
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::copy_in_predecessor(B_node<Record, order> *current, int position) {
+    B_node<Record, order> *leaf = current->branch[position];
+    while (leaf->branch[leaf->count] != nullptr) {
+        leaf = leaf->branch[leaf->count];
+    }
+    current->data[position] = leaf->data[leaf->count - 1];
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::restore(B_node<Record, order> *current, int position) {
+    if (position == current->count) {
+        if (current->branch[position - 1]->count > (order - 1) / 2) {
+            move_left(current, 1);
+        } else {
+            combine(current, 1);
+        }
+    } else {
+        if (current->branch[position - 1]->count > (order - 1) / 2) {
+            move_right(current, position - 1);
+        } else if (current->branch[position + 1]->count > (order - 1) / 2) {
+            move_left(current, position + 1);
+        } else {
+            combine(current, position);
+        }
+    }
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::move_left(B_node<Record, order> *current, int position) {
+    B_node<Record, order> *left_branch = current->branch[position - 1],
+            *right_branch = current->branch[position];
+    left_branch->data[left_branch->count] = current->data[position - 1];
+    left_branch->branch[++left_branch->count] = right_branch->branch[0];
+    current->data[position - 1] = right_branch->data[0];
+    right_branch->count--;
+    for (int i = 0; i < right_branch->count; ++i) {
+        right_branch->data[i] = right_branch->data[i + 1];
+        right_branch->branch[i] = right_branch->branch[i + 1];
+    }
+    right_branch->branch[right_branch->count] =
+            right_branch->branch[right_branch->count + 1];
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::move_right(B_node<Record, order> *current, int position) {
+    B_node<Record, order> *right_branch = current->branch[position + 1],
+            *left_branch = current->branch[position];
+    right_branch->branch[right_branch->count + 1] =
+            right_branch->branch[right_branch->count];
+    for (int i = right_branch->count; i > 0; --i) {
+        right_branch->data[i] = right_branch->data[i - 1];
+        right_branch->branch[i] = right_branch->branch[i - 1];
+
+    }
+    right_branch->count++;
+    right_branch->data[0] = current->data[position];
+    right_branch->branch[0] = left_branch->branch[left_branch->count--];
+    current->data[position] = left_branch->data[left_branch->count];
+}
+
+template<class Record, int order>
+void B_tree<Record, order>::combine(B_node<Record, order> *current, int position) {
+    B_node<Record, order> *left_branch = current->branch[position - 1],
+            *right_branch = current->branch[position];
+    left_branch->data[left_branch->count] = current->data[position - 1];
+    left_branch->branch[++left_branch->count] = right_branch->branch[0];
+    for (int i = 0; i < right_branch->count; ++i) {
+        left_branch->data[left_branch->count] = right_branch->data[i];
+        left_branch->branch[++left_branch->count] =
+                right_branch->branch[i + 1];
+    }
+    current->count--;
+    for (int i = position; i < current->count; ++i) {
+        current->data[i] = current->data[i + 1];
+        current->branch[i + 1] = current->branch[i + 2];
+    }
+    delete right_branch;
 }
 
 #endif //UNGEE_DATASTRUCTURES_B_TREE_H
