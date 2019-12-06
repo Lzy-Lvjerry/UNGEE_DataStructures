@@ -105,7 +105,6 @@ void B_tree<Record, order>::insert(const Record &new_entry) {
         new_root->branch[0] = root;
         new_root->branch[1] = right_branch;
         root = new_root;
-        result = true;
     }
 }
 
@@ -113,7 +112,7 @@ template<class Record, int order>
 bool B_tree<Record, order>::push_down(B_node<Record, order> *current, const Record &new_entry, Record &median,
                                       B_node<Record, order> *&right_branch) {
 
-    bool result;
+    bool result = true;
     int position;
     if (current == nullptr) {
         median = new_entry;
